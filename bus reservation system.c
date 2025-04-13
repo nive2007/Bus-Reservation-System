@@ -21,21 +21,22 @@ struct User {
 };
 
 void displayMainMenu() {
-    printf("\n========== Main Menu ==========\n");
-    printf("1. Login\n");
-    printf("2. Register\n");
-    printf("3. Forgot Password\n");
-    printf("4. Exit\n");
+    printf("\n\t\t\t\t\t========== Main Menu ==========\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t1. Login\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t2. Register\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t3. Forgot Password\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t4. Exit\t\t\t\t\t\t\n");
+    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n");
     printf("Enter your choice: ");
 }
 
 void displayUserMenu() {
-    printf("\n========== User Menu ==========\n");
-    printf("1. Book a Ticket\n");
-    printf("2. Cancel a Ticket\n");
-    printf("3. Check Bus Status\n");
-    printf("4. Add a Bus\n");
-    printf("5. Logout\n");
+    printf("\n\t\t\t\t\t========== User Menu ==========\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t1. Book a Ticket\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t2. Cancel a Ticket\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t3. Check Bus Status\t\t\t\t\t\t\n");
+    printf("\t\t\t\t\t\t4. Logout\t\t\t\t\t\t\n");
+    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n");
     printf("Enter your choice: ");
 }
 
@@ -53,7 +54,8 @@ int loadUsersFromFile(struct User users[]) {
     if (fp != NULL) {
         while (fscanf(fp, "%s %s %lld", users[count].username, users[count].password, &users[count].mobile) == 3) {
             count++;
-            if (count >= MAX_USERS) break;
+            if (count >= MAX_USERS) 
+			break;
         }
         fclose(fp);
     }
@@ -137,7 +139,7 @@ void forgotPassword(struct User users[], int numUsers) {
             scanf("%s", newPassword);
             strcpy(users[i].password, newPassword);
             printf("Password reset successful. Your new password is: %s\n", newPassword);
-            saveUserToFile(users[i]); // Update the file with the new password
+            saveUserToFile(users[i]);
             found = 1;
             break;
         }
@@ -236,28 +238,6 @@ void checkBusStatus(struct Bus buses[], int numBuses) {
     printf("Bus not found.\n");
 }
 
-void addBus(struct Bus buses[], int *numBuses) {
-    if (*numBuses >= MAX_BUSES) {
-        printf("Bus limit reached.\n");
-        return;
-    }
-
-    printf("\nEnter Bus Number: ");
-    scanf("%d", &buses[*numBuses].busNumber);
-    printf("Enter Source: ");
-    scanf("%s", buses[*numBuses].source);
-    printf("Enter Destination: ");
-    scanf("%s", buses[*numBuses].destination);
-    printf("Enter Total Seats: ");
-    scanf("%d", &buses[*numBuses].totalSeats);
-    buses[*numBuses].availableSeats = buses[*numBuses].totalSeats;
-    printf("Enter Fare: ");
-    scanf("%f", &buses[*numBuses].fare);
-
-    (*numBuses)++;
-    printf("Bus added successfully.\n");
-}
-
 int main() {
     struct User users[MAX_USERS];
     int numUsers = loadUsersFromFile(users);
@@ -281,30 +261,24 @@ int main() {
                 loggedInUser = loginUser(users, numUsers);
                 if (loggedInUser != -1) {
                     printf("Login successful. Welcome, %s!\n", users[loggedInUser].username);
-                } 
-				else {
+                } else {
                     printf("Login failed. Please try again.\n");
                 }
-            } 
-			else if (choice == 2) {
+            } else if (choice == 2) {
                 int regIndex = registerUser(users, numUsers);
                 if (regIndex != -1) {
                     numUsers++;
                     printf("Registration successful. Please login to continue.\n");
                 }
-            } 
-			else if (choice == 3) {
+            } else if (choice == 3) {
                 forgotPassword(users, numUsers);
-            } 
-			else if (choice == 4) {
+            } else if (choice == 4) {
                 printf("Thank you for using the system. Goodbye!\n");
                 break;
-            } 
-			else {
+            } else {
                 printf("Invalid choice.\n");
             }
-        } 
-		else {
+        } else {
             displayUserMenu();
             int userChoice;
             scanf("%d", &userChoice);
@@ -320,9 +294,6 @@ int main() {
                     checkBusStatus(buses, numBuses);
                     break;
                 case 4:
-                    addBus(buses, &numBuses);
-                    break;
-                case 5:
                     printf("Logging out...\n");
                     loggedInUser = -1;
                     break;
