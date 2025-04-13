@@ -21,23 +21,23 @@ struct User {
 };
 
 void displayMainMenu() {
-    printf("\n\t\t\t\t\t========== Main Menu ==========\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t1. Login\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t2. Register\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t3. Forgot Password\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t4. Exit\t\t\t\t\t\t\n");
-    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n");
-    printf("Enter your choice: ");
+    printf("\n\t\t\t\t\t========== MAIN MENU ==========\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t1. LOGIN TO YOUR EXISTING ACCOUNT\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t2. REGISTER A NEW ACCOUNT\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t3. FORGOT PASSWORD\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t4. EXIT\t\t\t\t\t\t\n");
+    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n\n");
+    printf("ENTER YOUR CHOICE: ");
 }
 
 void displayUserMenu() {
-    printf("\n\t\t\t\t\t========== User Menu ==========\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t1. Book a Ticket\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t2. Cancel a Ticket\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t3. Check Bus Status\t\t\t\t\t\t\n");
-    printf("\t\t\t\t\t\t4. Logout\t\t\t\t\t\t\n");
-    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n");
-    printf("Enter your choice: ");
+    printf("\n\t\t\t\t\t========== USER MENU ==========\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t1. BOOK A TICKET\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t2. CANCEL A TICKET\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t3. CHECK BUS STATUS\t\t\t\t\t\t\n\n");
+    printf("\t\t\t\t\t\t4. LOGOUT\t\t\t\t\t\t\n\n");
+    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n\n");
+    printf("ENTER YOUR CHOICE: ");
 }
 
 void saveUserToFile(struct User user) {
@@ -67,18 +67,18 @@ int loginUser(struct User users[], int numUsers) {
     long long mobile = 0;
     int op, i;
 
-    printf("To login with mobile number Press 1... Press 2 to continue with username!!\n");
+    printf("TO LOGIN WITH MOBILE NUMBER PRESS 1... PRESS 2 TO CONTINUE WITH USERNAME!!\n\n");
     scanf("%d", &op);
 
     if (op == 1) {
-        printf("Enter Mobile Number: ");
+        printf("ENTER YOUR MOBILE NUMBER: ");
         scanf("%lld", &mobile);
-        printf("Enter Password: ");
+        printf("ENTER PASSWORD: ");
         scanf("%s", password);
     } else {
-        printf("Enter Username: ");
+        printf("ENTER USERNAME: ");
         scanf("%s", username);
-        printf("Enter Password: ");
+        printf("ENTER PASSWORD: ");
         scanf("%s", password);
     }
 
@@ -93,7 +93,7 @@ int loginUser(struct User users[], int numUsers) {
 
 int registerUser(struct User users[], int numUsers) {
     if (numUsers >= MAX_USERS) {
-        printf("User limit reached.\n");
+        printf("USER LIMIT REACHED.\n");
         return -1;
     }
 
@@ -101,19 +101,19 @@ int registerUser(struct User users[], int numUsers) {
     long long mobile;
     int i;
 
-    printf("Enter a new username: ");
+    printf("ENTER A NEW USERNAME: ");
     scanf("%s", username);
 
     for (i = 0; i < numUsers; i++) {
         if (strcmp(users[i].username, username) == 0) {
-            printf("Username already exists. Try another one.\n");
+            printf("USERNAME ALREADY EXISTS. TRY ANOTHER ONE...\n");
             return -1;
         }
     }
 
-    printf("Enter a new password: ");
+    printf("ENTER A NEW PASSWORD: ");
     scanf("%s", password);
-    printf("Enter your mobile number: ");
+    printf("ENTER YOUR MOBILE NUMBER: ");
     scanf("%lld", &mobile);
 
     strcpy(users[numUsers].username, username);
@@ -130,15 +130,15 @@ void forgotPassword(struct User users[], int numUsers) {
     char newPassword[50];
     int i, found = 0;
 
-    printf("Enter your registered mobile number to reset password: ");
+    printf("ENTER YOUR REGISTERED MOBILE NUMBER TO RESET PASSWORD: ");
     scanf("%lld", &mobile);
 
     for (i = 0; i < numUsers; i++) {
         if (users[i].mobile == mobile) {
-            printf("Mobile number found. Enter a new password: ");
+            printf("MOBILE NUMBER NOT FOUND. ENTER A NEW PASSWORD: ");
             scanf("%s", newPassword);
             strcpy(users[i].password, newPassword);
-            printf("Password reset successful. Your new password is: %s\n", newPassword);
+            printf("PASSWORD RESET SUCCESSFUL. YOUR NEW PASSWORD IS: %s\n", newPassword);
             saveUserToFile(users[i]);
             found = 1;
             break;
@@ -146,7 +146,7 @@ void forgotPassword(struct User users[], int numUsers) {
     }
 
     if (!found) {
-        printf("Mobile number not found.\n");
+        printf("MOBILE NUMBER NOT FOUND.\n");
     }
 }
 
@@ -154,12 +154,12 @@ void bookTicket(struct Bus buses[], int numBuses) {
     int busNumber, seatsToBook;
     int i;
 
-    printf("\nAvailable Buses:\n");
+    printf("\nAVAILABLE BUSES:\n");
     for (i = 0; i < numBuses; i++) {
         printf("%d -- %s to %s\n", buses[i].busNumber, buses[i].source, buses[i].destination);
     }
 
-    printf("Enter Bus Number: ");
+    printf("ENTER BUS NUMBER: ");
     scanf("%d", &busNumber);
 
     int index = -1;
@@ -171,18 +171,18 @@ void bookTicket(struct Bus buses[], int numBuses) {
     }
 
     if (index == -1) {
-        printf("Bus not found.\n");
+        printf("BUS NOT FOUND.\n");
         return;
     }
 
-    printf("Enter number of seats to book: ");
+    printf("ENTER NUMBER OF SEATS TO BOOK: ");
     scanf("%d", &seatsToBook);
 
     if (seatsToBook > buses[index].availableSeats) {
-        printf("Only %d seats available.\n", buses[index].availableSeats);
+        printf("ONLY %d SEATS AVAILABLE.\n", buses[index].availableSeats);
     } else {
         buses[index].availableSeats -= seatsToBook;
-        printf("Booking successful! Total Fare: %.2f\n", buses[index].fare * seatsToBook);
+        printf("BOOKING SUCCESSFUL! TOTAL FARE: %.2f\n", buses[index].fare * seatsToBook);
     }
 }
 
@@ -190,7 +190,7 @@ void cancelTicket(struct Bus buses[], int numBuses) {
     int busNumber, seatsToCancel;
     int i;
 
-    printf("Enter Bus Number to cancel ticket: ");
+    printf("ENTER BUS NUMBER TO CANCEL TICKET: ");
     scanf("%d", &busNumber);
 
     int index = -1;
@@ -202,40 +202,40 @@ void cancelTicket(struct Bus buses[], int numBuses) {
     }
 
     if (index == -1) {
-        printf("Bus not found.\n");
+        printf("BUS NOT FOUND.\n");
         return;
     }
 
-    printf("Enter number of seats to cancel: ");
+    printf("ENTER NUMBER OF SEATS TO CANCEL: ");
     scanf("%d", &seatsToCancel);
 
     int bookedSeats = buses[index].totalSeats - buses[index].availableSeats;
     if (seatsToCancel > bookedSeats) {
-        printf("You can't cancel more than booked.\n");
+        printf("YOU CANNOT CANCEL MORE THAN BOOKED\n");
     } else {
         buses[index].availableSeats += seatsToCancel;
-        printf("Cancellation successful.\n");
+        printf("CANCELLATION SUCCESSFUL.\n");
     }
 }
 
 void checkBusStatus(struct Bus buses[], int numBuses) {
     int busNumber, i;
 
-    printf("Enter Bus Number to check status: ");
+    printf("ENTER A BUS NUMBER TO CHECK STATUS: ");
     scanf("%d", &busNumber);
 
     for (i = 0; i < numBuses; i++) {
         if (buses[i].busNumber == busNumber) {
-            printf("\nBus Number: %d\n", buses[i].busNumber);
-            printf("Route: %s -> %s\n", buses[i].source, buses[i].destination);
-            printf("Total Seats: %d\n", buses[i].totalSeats);
-            printf("Available Seats: %d\n", buses[i].availableSeats);
-            printf("Fare: %.2f\n", buses[i].fare);
+            printf("\nBUS NUMBER: %d\n", buses[i].busNumber);
+            printf("ROUTE: %s -> %s\n", buses[i].source, buses[i].destination);
+            printf("TOTAL SEATS: %d\n", buses[i].totalSeats);
+            printf("AVAILABLE SEATS: %d\n", buses[i].availableSeats);
+            printf("FARE: %.2f\n", buses[i].fare);
             return;
         }
     }
 
-    printf("Bus not found.\n");
+    printf("BUS NOT FOUND.\n");
 }
 
 int main() {
@@ -260,23 +260,23 @@ int main() {
             if (choice == 1) {
                 loggedInUser = loginUser(users, numUsers);
                 if (loggedInUser != -1) {
-                    printf("Login successful. Welcome, %s!\n", users[loggedInUser].username);
+                    printf("LOGIN SUCCESSFUL. WELCOME %s!\n", users[loggedInUser].username);
                 } else {
-                    printf("Login failed. Please try again.\n");
+                    printf("LOGIN FAILED. PLEASE TRY AGAIN.\n");
                 }
             } else if (choice == 2) {
                 int regIndex = registerUser(users, numUsers);
                 if (regIndex != -1) {
                     numUsers++;
-                    printf("Registration successful. Please login to continue.\n");
+                    printf("REGISTRATION SUCCESSFUL. PLEASE LOGIN TO CONTINUE.\n");
                 }
             } else if (choice == 3) {
                 forgotPassword(users, numUsers);
             } else if (choice == 4) {
-                printf("Thank you for using the system... Goodbye!\n");
+                printf("THANK YOU FOR USING THE SYSTEM... GOODBYE!\n");
                 break;
             } else {
-                printf("Invalid choice.\n");
+                printf("INVALID CHOICE.\n");
             }
         } else {
             displayUserMenu();
@@ -294,11 +294,11 @@ int main() {
                     checkBusStatus(buses, numBuses);
                     break;
                 case 4:
-                    printf("Logging out...\n");
+                    printf("LOGGING OUT...\n");
                     loggedInUser = -1;
                     break;
                 default:
-                    printf("Invalid choice.\n");
+                    printf("INVALID CHOICE.\n");
             }
         }
     }
