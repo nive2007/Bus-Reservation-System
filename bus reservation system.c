@@ -273,7 +273,7 @@ int main() {
             } else if (choice == 3) {
                 forgotPassword(users, numUsers);
             } else if (choice == 4) {
-                printf("Thank you for using the system. Goodbye!\n");
+                printf("Thank you for using the system... Goodbye!\n");
                 break;
             } else {
                 printf("Invalid choice.\n");
