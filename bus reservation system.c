@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> // Added for date and time
 
 #define MAX_USERS 100
 #define MAX_BUSES 100
@@ -21,22 +22,22 @@ struct User {
 };
 
 void displayMainMenu() {
-    printf("\n\t\t\t\t\t========== MAIN MENU ==========\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t1. LOGIN TO YOUR EXISTING ACCOUNT\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t2. REGISTER A NEW ACCOUNT\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t3. FORGOT PASSWORD\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t4. EXIT\t\t\t\t\t\t\n");
-    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n\n");
+    printf("\n\t\t\t\t\t================ MAIN MENU ================\n\n\n");
+    printf("\t\t\t\t\t\t1. LOGIN TO YOUR EXISTING ACCOUNT\n\n");
+    printf("\t\t\t\t\t\t2. REGISTER A NEW ACCOUNT\n\n");
+    printf("\t\t\t\t\t\t3. FORGOT PASSWORD\n\n");
+    printf("\t\t\t\t\t\t4. EXIT\n\n");
+    printf("\n\t\t\t\t\t=========================================\n\n");
     printf("ENTER YOUR CHOICE: ");
 }
 
 void displayUserMenu() {
-    printf("\n\t\t\t\t\t========== USER MENU ==========\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t1. BOOK A TICKET\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t2. CANCEL A TICKET\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t3. CHECK BUS STATUS\t\t\t\t\t\t\n\n");
-    printf("\t\t\t\t\t\t4. LOGOUT\t\t\t\t\t\t\n\n");
-    printf("\n\t\t\t\t\t===============================\t\t\t\t\t\n\n");
+    printf("\n\t\t\t\t\t========== USER MENU ==========\n\n");
+    printf("\t\t\t\t\t\t1. BOOK A TICKET\n\n");
+    printf("\t\t\t\t\t\t2. CANCEL A TICKET\n\n");
+    printf("\t\t\t\t\t\t3. CHECK BUS STATUS\n\n");
+    printf("\t\t\t\t\t\t4. LOGOUT\n\n");
+    printf("\n\t\t\t\t\t===============================\n\n");
     printf("ENTER YOUR CHOICE: ");
 }
 
@@ -54,8 +55,8 @@ int loadUsersFromFile(struct User users[]) {
     if (fp != NULL) {
         while (fscanf(fp, "%s %s %lld", users[count].username, users[count].password, &users[count].mobile) == 3) {
             count++;
-            if (count >= MAX_USERS) 
-			break;
+            if (count >= MAX_USERS)
+                break;
         }
         fclose(fp);
     }
@@ -135,7 +136,7 @@ void forgotPassword(struct User users[], int numUsers) {
 
     for (i = 0; i < numUsers; i++) {
         if (users[i].mobile == mobile) {
-            printf("MOBILE NUMBER NOT FOUND. ENTER A NEW PASSWORD: ");
+            printf("ENTER A NEW PASSWORD: ");
             scanf("%s", newPassword);
             strcpy(users[i].password, newPassword);
             printf("PASSWORD RESET SUCCESSFUL. YOUR NEW PASSWORD IS: %s\n", newPassword);
@@ -150,7 +151,7 @@ void forgotPassword(struct User users[], int numUsers) {
     }
 }
 
-void bookTicket(struct Bus buses[], int numBuses) {
+void bookTicket(struct Bus buses[], int numBuses, struct User currentUser) {
     int busNumber, seatsToBook;
     int i;
 
@@ -182,7 +183,36 @@ void bookTicket(struct Bus buses[], int numBuses) {
         printf("ONLY %d SEATS AVAILABLE.\n", buses[index].availableSeats);
     } else {
         buses[index].availableSeats -= seatsToBook;
-        printf("BOOKING SUCCESSFUL! TOTAL FARE: %.2f\n", buses[index].fare * seatsToBook);
+        printf("BOOKING SUCCESSFUL!\n");
+
+        // --- Create Receipt ---
+        FILE *fp = fopen("ticket.txt", "w");
+        if (fp == NULL) {
+            printf("ERROR GENERATING RECEIPT.\n");
+            return;
+        }
+
+        time_t now = time(NULL);
+        struct tm *local = localtime(&now);
+
+        // Centering helper
+        char *spaces = "                          "; // 26 spaces for centering
+
+        fprintf(fp, "\n%s********** TICKET RECEIPT **********\n", spaces);
+        fprintf(fp, "%sNAME           : %s\n", spaces, currentUser.username);
+        fprintf(fp, "%sMOBILE NUMBER  : %lld\n", spaces, currentUser.mobile);
+        fprintf(fp, "%sBUS NUMBER     : %d\n", spaces, buses[index].busNumber);
+        fprintf(fp, "%sROUTE          : %s -> %s\n", spaces, buses[index].source, buses[index].destination);
+        fprintf(fp, "%sSEATS BOOKED   : %d\n", spaces, seatsToBook);
+        fprintf(fp, "%sTOTAL FARE     : %.2f\n", spaces, buses[index].fare * seatsToBook);
+        fprintf(fp, "%sDATE           : %02d-%02d-%04d\n", spaces, local->tm_mday, local->tm_mon + 1, local->tm_year + 1900);
+        fprintf(fp, "%sTIME           : %02d:%02d:%02d\n", spaces, local->tm_hour, local->tm_min, local->tm_sec);
+        fprintf(fp, "%s************************************\n", spaces);
+
+        fclose(fp);
+
+        // --- Open New Window to Display the Ticket ---
+        system("start cmd /k type ticket.txt && pause");
     }
 }
 
@@ -285,7 +315,7 @@ int main() {
 
             switch (userChoice) {
                 case 1:
-                    bookTicket(buses, numBuses);
+                    bookTicket(buses, numBuses, users[loggedInUser]);
                     break;
                 case 2:
                     cancelTicket(buses, numBuses);
